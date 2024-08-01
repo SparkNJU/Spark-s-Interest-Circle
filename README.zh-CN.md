@@ -1,4 +1,4 @@
-# my-midway-project
+# my_midway_project
 
 ## 快速入门
 
@@ -18,7 +18,6 @@ $ open http://localhost:7001/
 
 ```bash
 $ npm start
-$ npm stop
 ```
 
 ### 内置指令

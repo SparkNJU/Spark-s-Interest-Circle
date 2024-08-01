@@ -1,14 +1,33 @@
-import { App, Configuration, ILifeCycle } from '@midwayjs/core';
+import { Configuration, App } from '@midwayjs/core';
+import * as koa from '@midwayjs/koa';
+import * as validate from '@midwayjs/validate';
+import * as info from '@midwayjs/info';
 import { join } from 'path';
-import * as egg from '@midwayjs/web';
+// import { DefaultErrorFilter } from './filter/default.filter';
+// import { NotFoundFilter } from './filter/notfound.filter';
+import { ReportMiddleware } from './middleware/report.middleware';
+import * as staticFile from '@midwayjs/static-file';
 
 @Configuration({
-  imports: [egg],
+  imports: [
+    koa,
+    validate,
+    staticFile,
+    {
+      component: info,
+      enabledEnvironment: ['local'],
+    },
+  ],
   importConfigs: [join(__dirname, './config')],
 })
-export class MainConfiguration implements ILifeCycle {
-  @App('egg')
-  app: egg.Application;
+export class MainConfiguration {
+  @App('koa')
+  app: koa.Application;
 
-  async onReady() {}
+  async onReady() {
+    // add middleware
+    this.app.useMiddleware([ReportMiddleware]);
+    // add filter
+    // this.app.useFilter([NotFoundFilter, DefaultErrorFilter]);
+  }
 }
