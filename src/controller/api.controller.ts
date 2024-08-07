@@ -2,7 +2,7 @@ import { Inject, Controller, Get, Query, Post } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
 import { UserService } from '../service/user.service';
 
-const todoList = [];
+export const todoList = [];
 
 
 @Controller('/api')
@@ -20,12 +20,20 @@ export class APIController {
   }
 
   @Post('/todo')
-  async addTodo(){
-    const text = this.ctx.request.body
-    todoList.push(text);
-    this.ctx.redirect('/api/todo')
-    return 'ok'
+  async addTodo() {
+    const body = this.ctx.request.body as { text?: string };
+    
+    const text = body.text; // 标准访问方式
+    if (typeof text === 'string') {
+      todoList.push({ text }); // 假设 `todoList` 需要存储对象
+    } else {
+      console.error('Invalid or missing text field');
+    }
+  
+    this.ctx.redirect('/');
+    return 'ok';
   }
+  
 
   @Get('/todo')
   async getTodo(){

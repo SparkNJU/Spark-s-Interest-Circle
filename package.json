@@ -11,10 +11,12 @@
     "@midwayjs/logger": "^3.1.0",
     "@midwayjs/static-file": "^3.16.6",
     "@midwayjs/validate": "^3.12.0",
+    "@midwayjs/view-ejs": "^3.16.8",
     "bcryptjs": "^2.4.3"
   },
   "devDependencies": {
     "@midwayjs/mock": "^3.12.0",
+    "@types/ejs": "^3.1.5",
     "@types/jest": "^29.2.0",
     "@types/node": "14",
     "@types/sequelize": "^4.28.20",

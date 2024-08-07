@@ -1,15 +1,26 @@
-import { Provide } from '@midwayjs/core';
+import { Provide , Inject} from '@midwayjs/core';
 import { IUserOptions } from '../interface';
+import { FileDBService } from './fileDB';
 
 @Provide()
 export class UserService {
-  // 将用户数据插入数据库
-  async register(username, password) {
+  @Inject()
+  fileDBService: FileDBService;
 
+
+  // 将用户数据插入数据库
+  async register(username: String, password: String) {
+    return await this.fileDBService.add(username,password);
   }
 
   // 检查用户名和密码是否匹配
-  async login(username, password) {
+  async login(username: String, password: String) {
+    const user = await this.fileDBService.findByUsername(username);
+    if(user.password === password){
+      return true;
+    }else{
+      return false;
+    }
 
   }
 
