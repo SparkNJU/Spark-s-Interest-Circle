@@ -2,6 +2,8 @@ import { Configuration, App } from '@midwayjs/core';
 import * as koa from '@midwayjs/koa';
 import * as validate from '@midwayjs/validate';
 import * as info from '@midwayjs/info';
+import * as view from '@midwayjs/view-ejs'; 
+import * as orm from '@midwayjs/typeorm'; 
 import { join } from 'path';
 // import { DefaultErrorFilter } from './filter/default.filter';
 // import { NotFoundFilter } from './filter/notfound.filter';
@@ -13,6 +15,8 @@ import * as staticFile from '@midwayjs/static-file';
     koa,
     validate,
     staticFile,
+    view,
+    orm,
     {
       component: info,
       enabledEnvironment: ['local'],

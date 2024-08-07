@@ -9,12 +9,12 @@ export class UserService {
 
 
   // 将用户数据插入数据库
-  async register(username: String, password: String) {
+  async register(username: string, password: string) {
     return await this.fileDBService.add(username,password);
   }
 
   // 检查用户名和密码是否匹配
-  async login(username: String, password: String) {
+  async login(username: string, password: string) {
     const user = await this.fileDBService.findByUsername(username);
     if(user.password === password){
       return true;
