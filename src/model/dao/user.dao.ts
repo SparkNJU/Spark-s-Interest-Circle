@@ -1,7 +1,7 @@
 import { Provide, Scope, ScopeEnum } from "@midwayjs/core";
 import { InjectEntityModel } from "@midwayjs/typeorm";
 //import { writeFile, readFile, existsSync } from "fs";
-import { User } from "../entity/user.entity";
+import { User } from "../../entity/user.entity";
 import { Repository } from "typeorm";
 
 
@@ -13,8 +13,8 @@ export interface Iuser {
 }
 
 @Scope(ScopeEnum.Singleton)
-@Provide('fileDBService')
-export class FileDBService {
+@Provide()
+export class UserDao {
     //private _userList: Iuser[] = [];
 
     //引入User模型

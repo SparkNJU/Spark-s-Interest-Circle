@@ -1,7 +1,7 @@
 import { Controller, Get, Provide, Inject } from '@midwayjs/core';
 // import { todoList } from './api.controller';
 import { Context } from '@midwayjs/koa';
-import { RenderService } from '../service/render.service';
+import { RenderService } from '../model/service/render.service';
 
 @Provide()
 @Controller('/')

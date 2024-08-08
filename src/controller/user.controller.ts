@@ -1,6 +1,6 @@
 import { Inject, Controller, Post, Get, Provide } from '@midwayjs/core';
 import { Context } from '@midwayjs/koa';
-import { UserService } from '../service/user.service';
+import { UserService } from '../model/service/user.service';
 import { IGetUserResponse } from '../interface';
 
 

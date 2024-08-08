@@ -1,11 +1,11 @@
 import { Provide , Inject} from '@midwayjs/core';
-import { IUserOptions } from '../interface';
-import { FileDBService } from './fileDB';
+import { IUserOptions } from '../../interface';
+import { UserDao } from '../dao/user.dao';
 
 @Provide()
 export class UserService {
   @Inject()
-  fileDBService: FileDBService;
+  fileDBService: UserDao;
 
 
   // 将用户数据插入数据库
