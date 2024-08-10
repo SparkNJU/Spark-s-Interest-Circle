@@ -1,7 +1,8 @@
 import { Controller, Get, Provide, Inject } from '@midwayjs/core';
 // import { todoList } from './api.controller';
 import { Context } from '@midwayjs/koa';
-import { RenderService } from '../model/service/render.service';
+import { RenderService } from '../service/render.service';
+import { MessageService } from '../service/message.service';
 
 @Provide()
 @Controller('/')
@@ -10,6 +11,8 @@ export class HomeController {
   renderService: RenderService
   @Inject()
   ctx: Context;
+  @Inject()
+  messageService: MessageService;
 
   @Get('/')
   async home() {
@@ -18,7 +21,8 @@ export class HomeController {
     if(text){
       cookies = JSON.parse(text);
     }
-    return this.renderService.render('home',{cookies})
+    const msgList = await this.messageService.list();
+    return this.renderService.render('home',{cookies, msgList})
   }
   @Get('/register')
   async register() {

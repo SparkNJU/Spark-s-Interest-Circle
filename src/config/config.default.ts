@@ -1,5 +1,6 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user.entity';
+import { Message } from '../entity/message.entity';
 
 export default {
   // use for cookie sign key, should change to your own and keep security
@@ -23,7 +24,10 @@ export default {
         logging: true,
 
         // 配置实体模型
-        entities: [User],
+        entities: [
+          User,
+          Message
+        ],
 
         // // 支持如下的扫描形式，为了兼容我们可以同时进行.js和.ts匹配，⬇️
         // entities: [

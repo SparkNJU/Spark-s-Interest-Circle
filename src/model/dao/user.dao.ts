@@ -61,13 +61,14 @@ export class UserDao {
 
         const userResult = await this.UserModel.save(user);
         console.log('user id = ', userResult.id)
-        return user;
-        // const list = await this.list();
-        // const item = await this.findByUsername(username);
-        // if(item){
-        //     throw new Error(`用户名${username}已存在`)
+        //const list = await this.list();
+        const item = await this.findByUsername(username);
+        if(item){
+            throw new Error(`用户名${username}已存在`)
             
-        // }
+        }
+        return user;
+
         // const user = {
         //     id: await this.incrId(),
         //     username,
