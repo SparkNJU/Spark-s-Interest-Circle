@@ -1,26 +1,82 @@
-<div id = "main">
-    <% if (cookies){ %>
-        欢迎你， <%=cookies.username %>! <a href="/user/logout">登出</a>
-        <!--显示帖子-->
-        <h2>帖子列表</h2>
-        <ul>
-            <% msgList.forEach(function({username, text, id}){%>
-                <li>#<%= cookies.id %> <%= username %>: 
-                    <%= text %></li>
-                <% }); %>
-        </ul>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>主页</title>
+    <link rel="stylesheet" href="../../public/styles/tailwind.css">
+    <style>
+        .dynamic-text {
+            animation: pulse 1.5s infinite;
+            font-size: 2rem; /* 字体大小 */
+            padding: 1rem 2rem; /* 内边距 */
+            border-radius: 0.5rem; /* 圆角 */
+            background-color: #2d9cdb; /* 淡蓝色背景 */
+            color: white; /* 字体颜色 */
+            text-decoration: none;
+            display: inline-block;
+        }
 
-        <!--发帖子-->
-        <h2>发帖</h2>
-        <form method="post" action="/message">
-            <textarea name = "text"></textarea>
-            <button>发布</button>
-        </form>
+        .dynamic-text:hover {
+            background-color: #1e79a1; /* 深蓝色背景 */
+        }
 
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans antialiased">
 
-    <%}else{%>
-        <a href="/login">请登录</a>
+    <div id="main" class="container mx-auto p-6">
+        <!-- 登录欢迎区 -->
+        <% if (cookies) { %>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-4">
+                <h1 class="text-3xl font-semibold text-white">欢迎你， <%= cookies.username %>!</h1>
+                <a href="/user/logout" class="text-teal-400 hover:underline">登出</a>
+            </div>
 
-    <%}%>
-</div>
+            <!-- 兴趣圈切换按钮 -->
+            <div class="mb-4">
+                <div class="flex space-x-4 bg-gray-700 p-3 rounded-lg overflow-x-auto">
+                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">政治</a>
+                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">教育</a>
+                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">体育</a>
+                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">科技</a>
+                </div>
+            </div>
 
+            <!-- 帖子列表 -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-4">
+                <h2 class="text-2xl font-semibold text-white mb-2">帖子列表</h2>
+                <ul>
+                    <% msgList.forEach(function({ username, text, id }) { %>
+                        <li class="border-b border-gray-600 py-2">
+                            <span class="text-gray-400">#<%= cookies.id %></span> 
+                            <span class="font-semibold text-white"><%= username %>:</span>
+                            <span class="text-gray-300"><%= text %></span>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- 发帖区域 -->
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold text-white mb-2">发帖</h2>
+                <form method="post" action="/message" class="space-y-4">
+                    <textarea name="text" rows="4" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-white" placeholder="写下你的帖子..."></textarea>
+                    <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">发布</button>
+                </form>
+            </div>
+
+        <% } else { %>
+            <div class="bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-center min-h-screen">
+                <a href="/login" class="dynamic-text">请登录</a>
+            </div>
+        <% } %>
+    </div>
+
+</body>
+</html>
