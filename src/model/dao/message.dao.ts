@@ -1,8 +1,9 @@
-import { Provide, Scope, ScopeEnum } from "@midwayjs/core";
+import { Inject, Provide, Scope, ScopeEnum } from "@midwayjs/core";
 import { InjectEntityModel } from "@midwayjs/typeorm";
 //import { writeFile, readFile, existsSync } from "fs";
 import { Repository } from "typeorm";
 import { Message } from "../../entity/message.entity";
+import { UserDao } from "./user.dao";
 
 
 
@@ -12,11 +13,14 @@ export interface Iuser {
     password: string;
 }
 
+
+
 @Scope(ScopeEnum.Singleton)
 @Provide()
 export class MessageDao {
     //private _userList: Iuser[] = [];
-
+    @Inject()
+    userDao: UserDao
     //引入Message模型
     @InjectEntityModel(Message)
     MessageModel: Repository<Message>
@@ -26,9 +30,9 @@ export class MessageDao {
 
     }
 
-    async add(username: string , text: string){
+    async add(id: number , text: string){//此处id是用户id
         let msg = new Message();
-        msg.username = username;
+        msg.username = await this.userDao.getUsernameById(id);
         msg.text = text;
 
         const messageResult = await this.MessageModel.save(msg);

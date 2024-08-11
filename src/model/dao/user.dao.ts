@@ -6,6 +6,7 @@ import { Repository } from "typeorm";
 
 
 
+
 export interface Iuser {
     id: number;
     username: string;
@@ -53,21 +54,35 @@ export class UserDao {
             return null;
         }
     }
+    async findById(id: number){
+        const user = await this.UserModel.findOne({
+            where:{
+                id:id
+            }
+        })
+        if(user){
+            return user;
+        }else{
+            return null;
+        }
+    }
 
     async add(username: string , password: string){
-        let user = new User();
-        user.username = username;
-        user.password = password;
-
-        const userResult = await this.UserModel.save(user);
-        console.log('user id = ', userResult.id)
-        //const list = await this.list();
         const item = await this.findByUsername(username);
         if(item){
-            throw new Error(`用户名${username}已存在`)
-            
+            throw new Error(`用户名${username}已存在`)       
+        }else{
+            let user = new User();
+            user.username = username;
+            user.password = password;
+
+            const userResult = await this.UserModel.save(user);
+            console.log('user id = ', userResult.id)
+            return userResult;
         }
-        return user;
+        
+        //const list = await this.list();
+        
 
         // const user = {
         //     id: await this.incrId(),
@@ -77,6 +92,10 @@ export class UserDao {
         // list.push(user);
         // await this.flushCache(list);
         // return user;
+    }
+    async getUsernameById(id:number){
+        const user = this.findById(id)
+        return (await user).username;
     }
 
 //     async del(id: number){

@@ -10,7 +10,7 @@ export class MessageService{
         return this.messageDao.list();
     }
 
-    async post(username: string, text: string){
-        return this.messageDao.add(username,text);
+    async post(id: number, text: string){
+        return this.messageDao.add(id,text);
     }
 }

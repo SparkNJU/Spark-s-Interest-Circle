@@ -21,15 +21,18 @@ export class UserService {
     }  
   }
 
-  // 检查用户名和密码是否匹配
-  async login(username: string, password: string) {
-    const user = await this.userDao.findByUsername(username);
+  // 检查用户ID和密码是否匹配
+  async login(id: number, password: string) {
+    const user = await this.userDao.findById(id);
     if(user.password === password){
       return true;
     }else{
       return false;
     }
 
+  }
+  async getUsernameById(id:number){
+    return await this.userDao.getUsernameById(id);
   }
 
   async getUser(options: IUserOptions) {

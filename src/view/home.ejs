@@ -4,8 +4,9 @@
         <!--显示帖子-->
         <h2>帖子列表</h2>
         <ul>
-            <% msgList.forEach(function({username, text}){%>
-                <li><%= username %>: <%= text %></li>
+            <% msgList.forEach(function({username, text, id}){%>
+                <li>#<%= cookies.id %> <%= username %>: 
+                    <%= text %></li>
                 <% }); %>
         </ul>
 

@@ -4,7 +4,6 @@ import { MessageService } from "../service/message.service";
 
 interface MessageBody {  
     text: string;  
-    // 可以添加其他属性  
 }  
 
 @Provide()
@@ -29,8 +28,8 @@ export class MessageController{
           cookies = JSON.parse(cookieText);
         }
         const { text } = this.ctx.request.body as MessageBody;
-        console.log(cookies.username, text);
-        this.messageService.post(cookies.username, text);
+        console.log(cookies.id, text);
+        this.messageService.post(cookies.id, text);
 
         
         this.ctx.redirect('/')
