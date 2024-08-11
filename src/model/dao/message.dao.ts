@@ -36,5 +36,16 @@ export class MessageDao {
         return msg;
     }
 
+    async delById(id: number){
+        return this.MessageModel.delete({id})
+    }
+
+    async getById(id: number){
+        return this.MessageModel.findOne({ where: { id: id } });
+    }
+
+    async updateById(id: number, text: string){
+        return this.MessageModel.update({id},{text})
+    }
 }
 
