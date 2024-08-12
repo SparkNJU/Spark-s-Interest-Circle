@@ -75,6 +75,7 @@ export class UserDao {
             let user = new User();
             user.username = username;
             user.password = password;
+            user.activityLevel = 0;
 
             const userResult = await this.UserModel.save(user);
             console.log('user id = ', userResult.id)
@@ -96,6 +97,11 @@ export class UserDao {
     async getUsernameById(id:number){
         const user = this.findById(id)
         return (await user).username;
+    }
+
+    async getActLevelById(id:number){
+        const user = this.findById(id)
+        return (await user).activityLevel;
     }
 
 //     async del(id: number){

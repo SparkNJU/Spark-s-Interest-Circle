@@ -10,8 +10,14 @@ export class Message {
     })
     username: string;
 
+    @Column()
+    uid: number;
+
     @Column({
         length: 500
     })
     text: string;
+
+    @Column()
+    activityLevel: number;
   }

@@ -14,4 +14,7 @@ export class User {
         length: 32
     })
     password: string;
+
+    @Column()
+    activityLevel: number;
   }

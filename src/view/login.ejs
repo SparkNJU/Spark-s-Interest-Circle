@@ -1,11 +1,112 @@
-<h1 >登录</h1>
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 / Login</title>
+    <link rel="stylesheet" href="../../public/styles/tailwind.css">
+    <style>
+        .message {
+            margin-top: 1rem;
+            font-size: 1rem;
+            color: #e53e3e; /* 红色错误信息 */
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans antialiased">
+    <div class="container mx-auto p-6 max-w-md bg-white rounded-lg shadow-lg mt-10">
+        <h1 class="text-2xl font-semibold text-gray-900 mb-6 text-center">欢迎来到兴趣圈 / Welcome to Interest Circle</h1>
 
-<form action = "/user/login" method="post">
-    用户ID<input name="id"/>
-    <br/>
-    密码  <input name="password"/>
-    <br/>
-    <button>登录</button>
-    <br/>
-    <a href="/register">还没有账号？请点此处注册</a>
-</form>
+        <form id="loginForm" class="space-y-4">
+            <div class="flex justify-center mb-4">
+                <label for="loginMethod" class="mr-4 text-gray-600 font-medium">登录方式 / Login Method:</label>
+                <select id="loginMethod" class="p-2 border border-gray-300 rounded-md bg-gray-50 text-gray-800" onchange="toggleLoginMethod()">
+                    <option value="username" selected>用户名 / Username</option>
+                    <option value="id">用户ID / User ID</option>
+                </select>
+            </div>
+
+            <div id="usernameContainer">
+                <label for="username" class="block text-gray-600 font-medium mb-1">用户名 / Username</label>
+                <input type="text" id="username" name="username" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-800" required />
+            </div>
+
+            <div id="idContainer" class="hidden">
+                <label for="id" class="block text-gray-600 font-medium mb-1">用户ID / User ID</label>
+                <input type="text" id="id" name="id" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-800" />
+            </div>
+
+            <div>
+                <label for="password" class="block text-gray-600 font-medium mb-1">密码 / Password</label>
+                <input type="password" id="password" name="password" class="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-800" required />
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-gray-800 text-white rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600">登录 / Login</button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <a href="/register" class="text-gray-600 hover:underline">还没有账号？请点此处注册 / Don't have an account? Register here</a>
+        </div>
+
+        <div id="message" class="message"></div>
+    </div>
+
+    <script>
+        function toggleLoginMethod() {
+            const loginMethod = document.getElementById('loginMethod').value;
+            const usernameContainer = document.getElementById('usernameContainer');
+            const idContainer = document.getElementById('idContainer');
+
+            if (loginMethod === 'username') {
+                usernameContainer.classList.remove('hidden');
+                idContainer.classList.add('hidden');
+                document.getElementById('username').required = true;
+                document.getElementById('id').required = false;
+            } else {
+                usernameContainer.classList.add('hidden');
+                idContainer.classList.remove('hidden');
+                document.getElementById('username').required = false;
+                document.getElementById('id').required = true;
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Prevent form from submitting the default way
+
+            const formData = new FormData(this);
+            const data = {
+                id: formData.get('id'),
+                username: formData.get('username'),
+                password: formData.get('password')
+            };
+
+            // Clean up empty fields
+            if (!data.id) delete data.id;
+            if (!data.username) delete data.username;
+
+            const response = await fetch('/user/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json();
+            const messageElement = document.getElementById('message');
+
+            if (response.ok) {
+                // Redirect to home page on success
+                window.location.href = '/';
+            } else {
+                // Display error message
+                messageElement.textContent = `登录失败：${result.message}`;
+            }
+        });
+
+        // Set default login method to username
+        toggleLoginMethod();
+    </script>
+</body>
+</html>

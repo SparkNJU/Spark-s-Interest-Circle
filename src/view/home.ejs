@@ -3,80 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>主页</title>
+    <title>一个可爱的兴趣圈</title>
     <link rel="stylesheet" href="../../public/styles/tailwind.css">
     <style>
+        .status-icon {
+            color: #f59e0b; /* 黄色 */
+            font-size: 1.25rem; /* 火焰图标大小 */
+        }
+
         .dynamic-text {
-            animation: pulse 1.5s infinite;
-            font-size: 2rem; /* 字体大小 */
-            padding: 1rem 2rem; /* 内边距 */
-            border-radius: 0.5rem; /* 圆角 */
-            background-color: #2d9cdb; /* 淡蓝色背景 */
-            color: white; /* 字体颜色 */
-            text-decoration: none;
-            display: inline-block;
+            color: #1d4ed8; /* 蓝色 */
+            text-decoration: underline;
         }
 
-        .dynamic-text:hover {
-            background-color: #1e79a1; /* 深蓝色背景 */
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.7; }
-            100% { transform: scale(1); opacity: 1; }
+        .login-register-prompt {
+            display: none;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans antialiased">
+<body class="bg-gray-100 text-gray-900 font-sans antialiased">
+    <div class="container mx-auto p-6 max-w-4xl">
 
-    <div id="main" class="container mx-auto p-6">
-        <!-- 登录欢迎区 -->
+        <!-- 欢迎区 -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-4 border border-gray-200 text-center">
+            <h1 class="text-3xl font-semibold text-gray-900 mb-4">欢迎来到兴趣圈 / Welcome to Interest Circle</h1>
+            <% if (cookies) { %>
+                <p class="text-lg text-gray-700 mb-4">欢迎你， <%= cookies.username %>!</p>
+                <a href="/user/logout" class="text-gray-700 hover:text-gray-900">登出 / Logout</a>
+            <% } else { %>
+                <a href="/login" class="dynamic-text">请登录 / Please Log In</a>
+            <% } %>
+        </div>
+
+        <!-- 登录注册提示 -->
+        <% if (!cookies) { %>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-4 border border-gray-200 text-center login-register-prompt">
+                <p class="text-lg text-gray-700 mb-4">请登录或注册以查看帖子内容和发帖 / Please log in or register to view posts and post content.</p>
+                <a href="/login" class="text-blue-500 hover:underline">登录 / Log In</a> |
+                <a href="/register" class="text-blue-500 hover:underline">注册 / Register</a>
+            </div>
+        <% } %>
+
+        <!-- 兴趣圈切换按钮 -->
+        <div class="bg-white p-3 rounded-lg shadow-md mb-4 border border-gray-300">
+            <div class="flex space-x-4 overflow-x-auto">
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">综合区 / General</a>
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">政治 / Politics</a>
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">教育 / Education</a>
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">体育 / Sports</a>
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">科技 / Technology</a>
+                <a href="#" class="bg-gray-200 text-gray-800 py-2 px-4 rounded-full text-center hover:bg-gray-300">添加 / Add</a>
+            </div>
+        </div>
+
+        <!-- 帖子列表 -->
         <% if (cookies) { %>
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-4">
-                <h1 class="text-3xl font-semibold text-white">欢迎你， <%= cookies.username %>!</h1>
-                <a href="/user/logout" class="text-teal-400 hover:underline">登出</a>
-            </div>
-
-            <!-- 兴趣圈切换按钮 -->
-            <div class="mb-4">
-                <div class="flex space-x-4 bg-gray-700 p-3 rounded-lg overflow-x-auto">
-                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">政治</a>
-                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">教育</a>
-                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">体育</a>
-                    <a href="#" class="bg-teal-500 text-white py-2 px-4 rounded-full text-center hover:bg-teal-600">科技</a>
-                </div>
-            </div>
-
-            <!-- 帖子列表 -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md mb-4">
-                <h2 class="text-2xl font-semibold text-white mb-2">帖子列表</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md mb-4 border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">帖子列表 / Post List</h2>
                 <ul>
-                    <% msgList.forEach(function({ username, text, id }) { %>
-                        <li class="border-b border-gray-600 py-2">
-                            <span class="text-gray-400">#<%= cookies.id %></span> 
-                            <span class="font-semibold text-white"><%= username %>:</span>
-                            <span class="text-gray-300"><%= text %></span>
+                    <% results.forEach(function({ username, text, uid, activityLevel }) { %>
+                        <li class="border-b border-gray-300 py-4 flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-gray-500 text-sm">#<%= uid %></span>
+                                <span class="text-gray-500 text-sm">活动度: <%= activityLevel %> <span class="status-icon">🔥</span></span>
+                            </div>
+                            <div>
+                                <span class="font-semibold text-gray-900"><%= username %>:</span>
+                                <span class="text-gray-700"><%= text %></span>
+                            </div>
                         </li>
                     <% }); %>
                 </ul>
+
+                <!-- 分页导航 -->
+                <div class="mt-4 flex justify-between">
+                    <% if (currentPage > 1) { %>
+                        <a href="?page=<%= currentPage - 1 %>" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">上一页</a>
+                    <% } %>
+                    <span class="px-4 py-2">第 <%= currentPage %> 页，共 <%= totalPages %> 页</span>
+                    <% if (currentPage < totalPages) { %>
+                        <a href="?page=<%= currentPage + 1 %>" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">下一页</a>
+                    <% } %>
+                </div>
             </div>
 
             <!-- 发帖区域 -->
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md">
-                <h2 class="text-2xl font-semibold text-white mb-2">发帖</h2>
+            <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">发帖 / Post</h2>
                 <form method="post" action="/message" class="space-y-4">
-                    <textarea name="text" rows="4" class="w-full p-3 border border-gray-600 rounded-lg bg-gray-900 text-white" placeholder="写下你的帖子..."></textarea>
-                    <button type="submit" class="px-4 py-2 bg-teal-500 text-white rounded-lg hover:bg-teal-600">发布</button>
+                    <textarea name="text" rows="4" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-50 text-gray-900" placeholder="写下你的帖子... / Write your post..."></textarea>
+                    <button type="submit" class="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700">发布 / Post</button>
                 </form>
-            </div>
-
-        <% } else { %>
-            <div class="bg-gray-800 p-6 rounded-lg shadow-md flex items-center justify-center min-h-screen">
-                <a href="/login" class="dynamic-text">请登录</a>
             </div>
         <% } %>
     </div>
-
 </body>
 </html>

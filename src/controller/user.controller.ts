@@ -3,11 +3,11 @@ import { Context } from '@midwayjs/koa';
 import { UserService } from '../service/user.service';
 import { IGetUserResponse } from '../interface';
 
-
-interface userBody{
-  id:number;
-  username: string;
+interface UserBody {
+  id?: number; // `id` 可能在注册时为空，因此可以是可选的
+  username?: string; // `username` 可能在通过 ID 登录时为空
   password: string;
+  activityLevel?: number; // `activityLevel` 是可选的
 }
 
 @Provide()
@@ -20,36 +20,76 @@ export class UserController {
   userService: UserService;
 
   @Post('/register')
-  async register():Promise<IGetUserResponse> {
-    const regBody:userBody = this.ctx.request.body as userBody;
-    if((!regBody.username) || (!regBody.password)){
-      //密码或者用户名为空
-      this.ctx.status = 500;
+  async register(): Promise<IGetUserResponse> {
+    const regBody: UserBody = this.ctx.request.body as UserBody;
+
+    if (!regBody.username || !regBody.password) {
+      this.ctx.status = 400; 
       return { success: false, message: '用户名或密码不能为空' };
     }
-    const user = await this.userService.register(regBody.username,regBody.password);
-    return { success: true, message: 'OK', data: user };
+
+    try {
+      const user = await this.userService.register(regBody.username, regBody.password);
+      if (user.error) {
+        this.ctx.status = 403;
+        return { success: false, message: user.error };
+      }
+      return user;
+    } catch (error) {
+      console.error(error);
+      this.ctx.status = 500;
+      return { success: false, message: '注册失败' };
+    }
   }
 
   @Post('/login')
-  async login():Promise<IGetUserResponse> {
-    const logBody:userBody = this.ctx.request.body as userBody;
-    const success = await this.userService.login(logBody.id, logBody.password);
-    if(success){
-      //成功登录
-      logBody.username = await this.userService.getUsernameById(logBody.id);
-      this.ctx.cookies.set('my_session_data', JSON.stringify(logBody))
-      this.ctx.redirect('/')
-      return;
-    }else{
-      this.ctx.status = 403
+  async login(): Promise<IGetUserResponse> {
+    const logBody: UserBody = this.ctx.request.body as UserBody;
+
+    if ((!logBody.id && !logBody.username) || !logBody.password) {
+      this.ctx.status = 400;
+      return { success: false, message: '用户ID、用户名或密码不能为空' };
     }
-    
+
+    try {
+      let user;
+      if (logBody.id) {
+        user = await this.userService.findById(logBody.id);
+        if (user && user.password === logBody.password) {
+          logBody.username = user.username;
+        }else{
+          this.ctx.status = 403;
+          return { success: false, message: '登录失败' };
+        }
+        
+      } else if (logBody.username) {
+        user = await this.userService.findByUsername(logBody.username);
+        if (user && user.password === logBody.password) {
+          logBody.id = user.id;
+        }else{
+          this.ctx.status = 403;
+          return { success: false, message: '登录失败' };
+        }
+      }
+
+      if (user) {
+        logBody.activityLevel = await this.userService.getActLevelById(logBody.id);
+        this.ctx.cookies.set('my_session_data', JSON.stringify(logBody));
+        return { success: true, message: '登录成功' };
+      } else {
+        this.ctx.status = 403;
+        return { success: false, message: '登录失败' };
+      }
+    } catch (error) {
+      console.error(error);
+      this.ctx.status = 500;
+      return { success: false, message: '登录失败' };
+    }
   }
 
   @Get('/logout')
-  async logout(){
-    this.ctx.cookies.set('my_session_data','')
-    this.ctx.redirect('/')
+  async logout() {
+    this.ctx.cookies.set('my_session_data', '');
+    this.ctx.redirect('/');
   }
 }
