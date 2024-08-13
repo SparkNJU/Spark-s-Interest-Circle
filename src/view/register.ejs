@@ -51,17 +51,10 @@
             event.preventDefault(); // Prevent form from submitting the default way
 
             const formData = new FormData(this);
-            const data = {
-                username: formData.get('username'),
-                password: formData.get('password')
-            };
 
             const response = await fetch('/user/register', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
+                body: formData // Use FormData directly
             });
 
             const result = await response.json();

@@ -14,10 +14,16 @@ export class Message {
     uid: number;
 
     @Column({
-        length: 500
+        length: 500,
+        default: 'zsbd' // 设置默认值为 'zsbd'
     })
     text: string;
 
     @Column()
     activityLevel: number;
-  }
+
+    @Column({
+        nullable: true
+    })
+    imageUrl?: string; // 用于存储图片 URL
+}

@@ -57,7 +57,7 @@ export class UserController {
         user = await this.userService.findById(logBody.id);
         if (user && user.password === logBody.password) {
           logBody.username = user.username;
-        }else{
+        } else {
           this.ctx.status = 403;
           return { success: false, message: '登录失败' };
         }
@@ -66,7 +66,7 @@ export class UserController {
         user = await this.userService.findByUsername(logBody.username);
         if (user && user.password === logBody.password) {
           logBody.id = user.id;
-        }else{
+        } else {
           this.ctx.status = 403;
           return { success: false, message: '登录失败' };
         }

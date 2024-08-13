@@ -10,7 +10,7 @@ export class MessageService {
         return this.messageDao.list(page, limit);
     }
 
-    async post(id: number, text: string) {
-        return this.messageDao.add(id, text);
+    async post(id: number, text: string, imageUrl?: string) {
+        return this.messageDao.add(id, text, imageUrl);
     }
 }

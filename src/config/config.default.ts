@@ -1,12 +1,24 @@
 import { MidwayConfig } from '@midwayjs/core';
 import { User } from '../entity/user.entity';
 import { Message } from '../entity/message.entity';
+import path = require('path');
 
 export default {
   // use for cookie sign key, should change to your own and keep security
   keys: '1721529887359_1765',
   koa: {
     port: 7001,
+    middleware: [
+      'koaBody',
+      // 其他中间件
+    ]
+  },
+  koaBody: {
+    multipart: true, // 支持 multipart 表单数据（如文件上传）
+    formidable: {
+      uploadDir: path.join(__dirname, '../public/uploads'), // 文件上传目录
+      keepExtensions: true, // 保留文件扩展名
+    }
   },
   typeorm: {
     dataSource: {

@@ -28,11 +28,12 @@ export class MessageDao {
         };
     }
 
-    async add(id: number, text: string) {
+    async add(id: number, text: string, imageUrl?: string) {
         let msg = new Message();
         msg.username = await this.userDao.getUsernameById(id);
         msg.uid = id;
         msg.text = text;
+        msg.imageUrl = (imageUrl || null); // 处理图片 URL
 
         await this.IncActLevelById(id);
         msg.activityLevel = 1 + (await this.userDao.getActLevelById(id));
