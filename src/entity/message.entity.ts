@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Circle } from './circle.entity';
+
+
+export enum MessageType {
+    TOPIC = 'TOPIC', // 主题帖
+    REPLY = 'REPLY', // 回复帖
+}
 
 @Entity('message')
 export class Message {
@@ -15,7 +22,7 @@ export class Message {
 
     @Column({
         length: 500,
-        default: 'zsbd' // 设置默认值为 'zsbd'
+        default: 'zsbd'
     })
     text: string;
 
@@ -25,5 +32,21 @@ export class Message {
     @Column({
         nullable: true
     })
-    imageUrl?: string; // 用于存储图片 URL
+    imageUrl?: string;
+
+    @Column({
+        type: 'enum',
+        enum: MessageType,
+        default: MessageType.TOPIC
+    })
+    type: MessageType;
+
+    @ManyToOne(() => Circle, { nullable: true })
+    circle: Circle; // 关联的圈子
+
+    @Column({ nullable: true })
+    replyToId: number | null;
+
+    @ManyToOne(() => Message, { nullable: true })
+    replyTo: Message | null;
 }

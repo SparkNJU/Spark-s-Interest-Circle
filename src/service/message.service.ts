@@ -1,5 +1,6 @@
 import { Inject, Provide } from "@midwayjs/core";
 import { MessageDao } from "../model/dao/message.dao";
+import { MessageType } from "../entity/message.entity";
 
 @Provide()
 export class MessageService {
@@ -10,7 +11,7 @@ export class MessageService {
         return this.messageDao.list(page, limit);
     }
 
-    async post(id: number, text: string, imageUrl?: string) {
-        return this.messageDao.add(id, text, imageUrl);
+    async post(id: number, text: string, imageUrl?: string, circleName: string = "综合区", type: MessageType = MessageType.TOPIC) {
+        return this.messageDao.add(id, text, imageUrl, circleName, type);
     }
 }

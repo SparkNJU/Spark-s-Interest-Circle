@@ -1,146 +1,63 @@
 # Spark's Interest Circle
+
 ## 南京大学2023-2024第二学期暑期课程《web开发》课程作业
+
+欢迎使用 Spark 的兴趣圈应用程序！本项目是南京大学《web开发》课程作业的一部分。以下文档将介绍项目的主要功能、使用的技术栈及其实现细节。
+
+## 项目简介
+
+Spark 的兴趣圈应用程序是一个社交平台，允许用户创建和参与不同的兴趣圈，发帖讨论话题，并查看其他用户的活跃情况。用户可以在兴趣圈内发帖、评论帖子，并且能够查看帖子的图片和其他用户的活跃度。
+
+## 技术栈
+
+### TypeORM
+
+TypeORM 是一个 TypeScript ORM 框架，用于处理与数据库的交互。本项目使用 TypeORM 来管理 MySQL 数据库中的数据模型，包括用户、兴趣圈、帖子等实体。通过 TypeORM，我们可以简化与数据库的交互，提高开发效率。
+
+### koa-body
+
+koa-body 是一个 Koa 中间件，用于处理 HTTP 请求的 `body`。它帮助我们解析表单数据和文件上传，从而使得处理用户提交的内容更加高效。在本项目中，koa-body 被用来处理用户发帖时的文本内容、选择的兴趣圈以及上传的图片。
+
+### mysql2
+
+mysql2 是一个高性能的 MySQL 驱动，用于连接和操作 MySQL 数据库。相比于传统的 mysql 驱动，mysql2 提供了更好的性能和更丰富的功能。本项目使用 mysql2 处理数据库连接和查询操作。
+
+## 核心功能
+
+### 用户名和 ID 唯一性
+
+- **用户名查重**: 在用户注册时，系统会检查用户名是否已经存在，以确保每个用户名在系统中唯一。
+- **ID 唯一性**: 系统会为每个用户分配唯一的 ID，用于区分不同用户，并且确保 ID 不重复。
+
+### 登录方式
+
+- **用户名/密码登录**: 用户可以通过输入用户名和密码进行登录。
+- **ID 登录**: 用户也可以使用用户 ID 进行登录，这为用户提供了更多的登录选择。
+
+### 前端设计
+
+- **使用 EJS**: 本项目选择使用 EJS (Embedded JavaScript Templates) 而非 React 来构建前端。EJS 是一种模板引擎，可以直接在服务器端生成 HTML 代码，适合项目规模较小、功能较为简单的应用。而 React 更适用于大型单页面应用程序 (SPA)，具有复杂的用户交互需求。
+-  **使用 tailwindcss**:本项目使用 TailwindCSS 作为样式框架。你可以使用以下命令来编译 TailwindCSS 文件：
+
+$ bash
+$ 复制代码
+$ npx tailwindcss -i ./src/input.css -o ./public/styles/tailwind.$ css --watch
+
+### 功能实现
+
+- **多用户登录**: 用户可以使用用户名/密码或用户 ID 进行登录。
+- **兴趣圈创建**: 用户可以创建新的兴趣圈。
+- **兴趣圈发帖**: 用户可以在兴趣圈内发帖，分享文本和图片。
+- **帖子查看**: 用户可以查看兴趣圈中的帖子，包括帖子内容、图片和活跃度。
+- **展示兴趣圈成员活跃情况**: 系统会展示每个用户在兴趣圈中的活跃程度，以便用户了解圈内活跃情况。
+- **发帖可添加图片**: 用户在发帖时可以上传图片。
+- **帖子评论**: 用户可以对帖子进行评论（目前评论功能尚在开发中）。
 
 ## 快速入门
 
-<!-- 在此次添加使用文档 -->
-tailwindCSS编译指令  npx tailwindcss -i ./src/input.css -o ./public/styles/tailwind.css --watch
+在开始使用本项目之前，请确保你已经安装了 Node.js 和 npm。接下来，你可以按照以下步骤进行设置和启动项目：
 
-如需进一步了解，参见 [midway 文档][midway]。
-
-### 本地开发
+### 安装依赖
 
 ```bash
-$ npm i
-$ npm run dev
-$ open http://localhost:7001/
-```
-
-### 部署
-
-```bash
-$ npm start
-```
-
-### 内置指令
-
-- 使用 `npm run lint` 来做代码风格检查。
-- 使用 `npm test` 来执行单元测试。
-
-
-[midway]: https://midwayjs.org
-这个错误表明 this.ctx.request 的类型并不包含 files 属性。这可能是因为 TypeScript 无法识别 koa-body 的扩展类型。
-
-解决方案：
-
-扩展 koa 的类型定义：
-
-你需要扩展 koa 的类型定义以包括 files 属性。可以在你的项目中创建一个自定义的类型定义文件，例如 typings/koa.d.ts，并添加以下内容：
-
-typescript
-复制代码
-import * as Koa from 'koa';
-
-declare module 'koa' {
-  interface Request {
-    files?: {
-      [key: string]: any; // 如果知道具体类型可以更准确地定义
-    };
-  }
-}
-更新 koa-body 的类型定义：
-
-确保你已正确安装 koa-body 和相关的类型定义包。如果没有，你可以尝试重新安装或检查版本：
-
-bash
-复制代码
-npm install koa-body
-npm install @types/koa-body
-如果没有提供类型定义，你可以使用自定义的类型定义文件。
-
-修正 MessageController 中的代码：
-
-更新 MessageController 以处理文件上传，并确保 TypeScript 能正确识别 files 属性：
-
-typescript
-复制代码
-import { Controller, Get, Inject, Post, Provide, Query } from "@midwayjs/core";
-import { Context } from "@midwayjs/koa";
-import * as path from 'path';
-import * as fs from 'fs';
-import { MessageService } from "../service/message.service";
-import koaBody from 'koa-body';
-
-interface MessageBody {  
-    text: string;  
-    imageUrl?: string; // 处理图片 URL
-}  
-
-@Provide()
-@Controller('/message')
-export class MessageController {
-    @Inject()
-    ctx: Context;
-
-    @Inject()
-    messageService: MessageService;
-
-    @Post('/')
-    async post(): Promise<any> {
-        // 先应用 koa-body 中间件处理请求体和文件
-        await koaBody({
-            multipart: true,
-            parsedMethods: ['POST']
-        })(this.ctx as any, async () => {});
-
-        const cookieText = this.ctx.cookies.get('my_session_data');
-        let cookies = null;
-        if (cookieText) {
-            cookies = JSON.parse(cookieText);
-        }
-
-        const { text } = this.ctx.request.body as MessageBody;
-        let imageUrl = null;
-
-        // 确保 ctx.request.files 具有正确的类型
-        const files = (this.ctx.request.files || {}) as { [key: string]: any };
-        if (files.image) {
-            const image = files.image;
-            const uploadDir = path.join(__dirname, '../public/uploads'); // 上传文件目录
-            const ext = path.extname(image.name);
-            const fileName = `${Date.now()}${ext}`;
-            const filePath = path.join(uploadDir, fileName);
-
-            if (!fs.existsSync(uploadDir)) {
-                fs.mkdirSync(uploadDir, { recursive: true });
-            }
-
-            fs.writeFileSync(filePath, fs.readFileSync(image.path));
-            imageUrl = `/uploads/${fileName}`; // 图片 URL
-        }
-
-        await this.messageService.post(cookies.id, text, imageUrl);
-
-        this.ctx.redirect('/');
-    }
-
-    @Get('/')
-    async list(): Promise<any> {
-        const list = await this.messageService.list();
-        return list;
-    }
-
-    @Get('/posts')
-    async getPosts(@Query('page') page: number = 1) {
-        const { results, total, page: currentPage, totalPages } = await this.messageService.list(page);
-        return { results, total, currentPage, totalPages };
-    }
-}
-确保 koa-body 中间件顺序：
-
-在 config.default.ts 中，确保 koa-body 中间件在其他中间件之前被正确加载。
-
-这样可以帮助 TypeScript 识别 files 属性，解决你遇到的类型问题。
-
-
-
+$ npm install

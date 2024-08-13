@@ -3,6 +3,7 @@ import { Context } from "@midwayjs/koa";
 import * as path from 'path';
 import * as fs from 'fs';
 import { MessageService } from "../service/message.service";
+import { MessageType } from "../entity/message.entity";
 
 @Provide()
 @Controller('/message')
@@ -33,11 +34,21 @@ export class MessageController {
         const text = body.text || ''; // 确保 text 是一个字符串
         let imageUrl = null;
 
+        // 处理 circleName
+        const selectedCircleName = body.circleName || '';
+        const inputCircleName = body.circleNameInput || '';
+        const circleName = selectedCircleName || inputCircleName || '综合区'; // 默认值
+
+        const type = body.type || MessageType.TOPIC; // 获取消息类型
+
         // 调试日志
         console.log('Body:', body);
         console.log('Files:', files);
+        console.log('Selected Circle Name:', selectedCircleName);
+        console.log('Input Circle Name:', inputCircleName);
+        console.log('Final Circle Name:', circleName);
 
-        if (files && files.image && files.image.size>0) {
+        if (files && files.image && files.image.size > 0) {
             const image = files.image;
 
             // 确保 image 对象有必要的属性
@@ -47,8 +58,6 @@ export class MessageController {
             }
 
             const uploadDir = path.join(__dirname, '../../public/uploads'); // 上传文件目录
-            console.log('Upload Directory Path:', uploadDir);
-
             const ext = path.extname(image.originalFilename || ''); // 使用 originalFilename 获取文件扩展名
             const fileName = `${Date.now()}${ext}`;
             const filePath = path.join(uploadDir, fileName);
@@ -66,11 +75,14 @@ export class MessageController {
 
         console.log('Text:', text);
         console.log('Image URL:', imageUrl);
+        console.log('Circle Name:', circleName);
+        console.log('Type:', type);
 
-        await this.messageService.post(cookies.id, text, imageUrl);
+        await this.messageService.post(cookies.id, text, imageUrl, circleName, type);
 
         this.ctx.redirect('/');
     }
+
 
     @Get('/posts')
     async getPosts(@Query('page') page: number = 1) {
